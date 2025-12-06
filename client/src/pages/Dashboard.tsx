@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [heroDesigns, setHeroDesigns] = useState<Design[]>([]);
   const [loading, setLoading] = useState(true);
   const [heroLoading, setHeroLoading] = useState(true);
+  const [processingUpload, setProcessingUpload] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -65,6 +66,18 @@ export default function Dashboard() {
       navigate(`/design/${heroDesigns[index].id}`);
     }
   }, [heroDesigns, navigate]);
+
+  const handleUploadSuccess = useCallback(async () => {
+    setProcessingUpload(true);
+    
+    // Wait for 5 seconds to allow backend processing
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
+    // Fetch updated designs after processing completes
+    await Promise.all([fetchDesignsList(), fetchHeroDesigns()]);
+    
+    setProcessingUpload(false);
+  }, [fetchDesignsList, fetchHeroDesigns]);
 
   const hasHeroDesigns = useMemo(() => heroDesigns.length > 0, [heroDesigns.length]);
   const shouldShowHero = useMemo(() => hasHeroDesigns || heroLoading, [hasHeroDesigns, heroLoading]);
@@ -119,7 +132,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-gray-900 mb-8 animate-fade-in">All Designs</h1>
           
           <div className="animate-slide-up animate-delay-100">
-            <UploadForm />
+            <UploadForm onUploadSuccess={handleUploadSuccess} />
           </div>
 
           {loading ? (

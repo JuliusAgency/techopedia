@@ -45,14 +45,31 @@ export default function Squares({
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      numSquaresX.current = Math.ceil(canvas.width / squareSize) + 1;
-      numSquaresY.current = Math.ceil(canvas.height / squareSize) + 1;
+      const rect = canvas.getBoundingClientRect();
+      const width = rect.width || canvas.offsetWidth || window.innerWidth;
+      const height = rect.height || canvas.offsetHeight || window.innerHeight;
+      
+      // Only resize if dimensions are valid
+      if (width > 0 && height > 0) {
+        canvas.width = width;
+        canvas.height = height;
+        numSquaresX.current = Math.ceil(canvas.width / squareSize) + 1;
+        numSquaresY.current = Math.ceil(canvas.height / squareSize) + 1;
+      }
     };
 
+    // Use ResizeObserver for better dimension tracking
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas();
+    });
+    resizeObserver.observe(canvas);
+
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    
+    // Ensure dimensions are set after layout
+    requestAnimationFrame(() => {
+      resizeCanvas();
+    });
 
     const drawGrid = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -150,6 +167,7 @@ export default function Squares({
     requestRef.current = requestAnimationFrame(updateAnimation);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('resize', resizeCanvas);
       if (requestRef.current !== null) {
         cancelAnimationFrame(requestRef.current);

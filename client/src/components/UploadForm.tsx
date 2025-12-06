@@ -1,7 +1,11 @@
 import { useState, useCallback } from 'react';
 import { uploadDesign } from '../services/api';
 
-export default function UploadForm() {
+interface UploadFormProps {
+  onUploadSuccess?: () => void;
+}
+
+export default function UploadForm({ onUploadSuccess }: UploadFormProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,14 +23,14 @@ export default function UploadForm() {
 
     try {
       await uploadDesign(file);
-      window.location.reload();
+      onUploadSuccess?.();
     } catch (err) {
       setError('Failed to upload file');
     } finally {
       setUploading(false);
       e.target.value = '';
     }
-  }, []);
+  }, [onUploadSuccess]);
 
   return (
     <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-100/50 p-6">
