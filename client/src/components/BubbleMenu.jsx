@@ -43,11 +43,12 @@ const DEFAULT_ITEMS = [
 
 export default function BubbleMenu({
   logo,
+  welcomeName,
   onMenuClick,
   className,
   style,
   menuAriaLabel = 'Toggle menu',
-  menuBg = '#fff',
+  menuBg = '#6B21A8',
   menuContentColor = '#111',
   useFixedPosition = false,
   items,
@@ -154,7 +155,8 @@ export default function BubbleMenu({
       <nav className={containerClassName} style={style} aria-label="Main navigation">
         <div className="bubble logo-bubble" aria-label="Logo" style={{ background: menuBg }}>
           <span className="logo-content">
-            {typeof logo === 'string' ? <img src={logo} alt="Logo" className="bubble-logo" /> : logo}
+            <img src="/logo.png" alt="Agency Logo" className="bubble-logo" />
+            {welcomeName && <span className="welcome-name" style={{ color: menuContentColor }}>{welcomeName}</span>}
           </span>
         </div>
 
