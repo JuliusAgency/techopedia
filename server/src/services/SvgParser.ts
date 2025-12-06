@@ -22,7 +22,6 @@ export class SvgParser {
       attributeNamePrefix: '@_',
       parseAttributeValue: false,
       trimValues: true,
-      ignoreNameSpace: false,
       removeNSPrefix: false,
       parseTagValue: false
     });

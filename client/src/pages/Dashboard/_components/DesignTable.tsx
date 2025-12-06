@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { DesignListItem } from '../../../types/Design';
-import { formatDate } from './utils';
+import { formatDate } from '../components/utils';
 import StatusBadge from './StatusBadge';
 
 interface DesignTableProps {

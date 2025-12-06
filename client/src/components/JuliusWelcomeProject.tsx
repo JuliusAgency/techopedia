@@ -38,6 +38,9 @@ export default function JuliusWelcomeProject() {
         useFixedPosition={true}
         menuBg="#fff"
         menuContentColor="#111"
+        onMenuClick={() => {}}
+        className=""
+        style={{}}
       />
     </div>
   );

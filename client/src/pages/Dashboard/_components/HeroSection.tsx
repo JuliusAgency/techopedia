@@ -1,4 +1,4 @@
-import FeatureCard from './FeatureCard';
+import FeatureCard from '../components/FeatureCard';
 
 export default function HeroSection() {
   return (

@@ -1,4 +1,5 @@
-import React, { Children, cloneElement, forwardRef, isValidElement, useEffect, useMemo, useRef, ReactNode } from 'react';
+import * as React from 'react';
+import { Children, cloneElement, forwardRef, isValidElement, useEffect, useMemo, useRef, ReactNode } from 'react';
 import gsap from 'gsap';
 import './CardSwap.css';
 

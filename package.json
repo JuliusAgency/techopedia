@@ -7,6 +7,7 @@
     "client"
   ],
   "scripts": {
+    "build": "npm run build --workspace=server",
     "dev": "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
     "install:all": "npm install && npm install --workspace=server && npm install --workspace=client",
     "dev:server": "npm install --workspace=server && npm run dev --workspace=server",
@@ -17,7 +18,7 @@
     "start:server": "npm run start --workspace=server",
     "start:client": "npm run preview --workspace=client",
     "start:all": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "heroku-prebuild": "echo 'Heroku prebuild: Installing dependencies...'",
+    "heroku-prebuild": "npm install --workspace=server",
     "heroku-postbuild": "npm run build --workspace=server",
     "start": "npm run start --workspace=server",
     "vercel-install": "npm install --workspace=client",

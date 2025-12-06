@@ -1,4 +1,4 @@
-import { getStatusColor } from './utils';
+import { getStatusColor } from '../components/utils';
 
 interface DesignHeaderProps {
   filename: string;
