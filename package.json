@@ -8,7 +8,15 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
-    "install:all": "npm install && npm install --workspace=server && npm install --workspace=client"
+    "install:all": "npm install && npm install --workspace=server && npm install --workspace=client",
+    "dev:server": "npm install --workspace=server && npm run dev --workspace=server",
+    "dev:client": "npm install --workspace=client && npm run dev --workspace=client",
+    "build:server": "npm run build --workspace=server",
+    "build:client": "npm run build --workspace=client",
+    "build:all": "npm run build:server && npm run build:client",
+    "start:server": "npm run start --workspace=server",
+    "start:client": "npm run preview --workspace=client",
+    "start:all": "concurrently \"npm run start:server\" \"npm run start:client\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
