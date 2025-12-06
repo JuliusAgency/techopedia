@@ -1,6 +1,6 @@
 import { DesignListItem, Design } from '../types/Design';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const uploadDesign = async (file: File): Promise<{ id: string; filename: string; status: string }> => {
   const formData = new FormData();
