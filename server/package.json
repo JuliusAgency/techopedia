@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "vercel-install": "echo 'Skipping server install for Vercel'",
+    "vercel-build": "echo 'Skipping server build for Vercel'",
+    "vercel-start": "echo 'Skipping server start for Vercel'"
   },
   "dependencies": {
     "express": "^4.18.2",
