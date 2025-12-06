@@ -16,7 +16,10 @@
     "build:all": "npm run build:server && npm run build:client",
     "start:server": "npm run start --workspace=server",
     "start:client": "npm run preview --workspace=client",
-    "start:all": "concurrently \"npm run start:server\" \"npm run start:client\""
+    "start:all": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "heroku-prebuild": "echo 'Heroku prebuild: Installing dependencies...'",
+    "heroku-postbuild": "npm run build --workspace=server",
+    "start": "npm run start --workspace=server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
