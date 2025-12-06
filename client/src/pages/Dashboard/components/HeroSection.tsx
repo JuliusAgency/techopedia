@@ -3,24 +3,6 @@ import FeatureCard from './FeatureCard';
 export default function HeroSection() {
   return (
     <div className="text-gray-900 space-y-6 animate-fade-in">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-gray-200 flex-shrink-0">
-          <img 
-            src="/logo.png" 
-            alt="Logo" 
-            className="w-16 h-16 object-contain"
-          />
-        </div>
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-            Welcome to Techopedia
-          </h1>
-          <p className="text-sm text-gray-600">
-            Your intelligent design analysis platform
-          </p>
-        </div>
-      </div>
-      
       <div>
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-gray-900">
           Design Analyzer
