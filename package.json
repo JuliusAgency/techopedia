@@ -19,7 +19,10 @@
     "start:all": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "heroku-prebuild": "echo 'Heroku prebuild: Installing dependencies...'",
     "heroku-postbuild": "npm run build --workspace=server",
-    "start": "npm run start --workspace=server"
+    "start": "npm run start --workspace=server",
+    "vercel-install": "npm install --workspace=client",
+    "vercel-build": "npm run build --workspace=client",
+    "vercel-start": "npm run preview --workspace=client"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
