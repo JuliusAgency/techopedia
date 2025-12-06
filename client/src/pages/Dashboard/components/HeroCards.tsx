@@ -42,6 +42,7 @@ export default function HeroCards({ designs, loading, onCardClick }: HeroCardsPr
             <div className="flex-1 flex items-center justify-center overflow-hidden min-h-0">
               {design.status === 'processed' && design.items.length > 0 ? (
                 <CanvasPreviewCompact
+                  key={design.id}
                   svgWidth={design.svgWidth}
                   svgHeight={design.svgHeight}
                   items={design.items}

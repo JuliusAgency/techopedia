@@ -36,7 +36,12 @@ export default function CanvasPreviewCompact({
   maxHeight = 300
 }: CanvasPreviewCompactProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
+  const animationTimeoutRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const isMountedRef = useRef(true);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const calculateScale = useCallback((): ScaleData | null => {
     if (svgWidth <= 0 || svgHeight <= 0) {
@@ -66,32 +71,11 @@ export default function CanvasPreviewCompact({
     return { scaleFactor, offsetX, offsetY, scaledWidth, scaledHeight };
   }, [svgWidth, svgHeight, maxWidth, maxHeight]);
 
-  useEffect(() => {
-    setVisibleItems(new Set());
-    
-    if (!items || items.length === 0) return;
-
-    let currentIndex = 0;
-    const animate = () => {
-      if (currentIndex < items.length) {
-        setVisibleItems(prev => {
-          const next = new Set(prev);
-          next.add(currentIndex);
-          return next;
-        });
-        currentIndex++;
-        setTimeout(animate, 20);
-      }
-    };
-
-    setTimeout(animate, 50);
-  }, [items]);
-
-  useEffect(() => {
+  const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !isMountedRef.current) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: false });
     if (!ctx) return;
 
     ctx.clearRect(0, 0, maxWidth, maxHeight);
@@ -137,10 +121,130 @@ export default function CanvasPreviewCompact({
     });
   }, [svgWidth, svgHeight, items, calculateScale, visibleItems, maxWidth, maxHeight]);
 
+  useEffect(() => {
+    isMountedRef.current = true;
+    
+    if (animationTimeoutRef.current !== null) {
+      clearTimeout(animationTimeoutRef.current);
+      animationTimeoutRef.current = null;
+    }
+    
+    setVisibleItems(new Set());
+    
+    if (!items || items.length === 0) {
+      return;
+    }
+
+    const showAllItems = () => {
+      if (!isMountedRef.current) return;
+      const allIndices = new Set(items.map((_, index) => index));
+      setVisibleItems(allIndices);
+    };
+
+    animationTimeoutRef.current = window.setTimeout(showAllItems, 50);
+
+    return () => {
+      isMountedRef.current = false;
+      if (animationTimeoutRef.current !== null) {
+        clearTimeout(animationTimeoutRef.current);
+        animationTimeoutRef.current = null;
+      }
+    };
+  }, [items]);
+
+  useEffect(() => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
+
+    rafRef.current = requestAnimationFrame(() => {
+      drawCanvas();
+    });
+
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+  }, [visibleItems, svgWidth, svgHeight, items, maxWidth, maxHeight, calculateScale, drawCanvas]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    if (canvas.width !== maxWidth || canvas.height !== maxHeight) {
+      canvas.width = maxWidth;
+      canvas.height = maxHeight;
+    }
+
+    rafRef.current = requestAnimationFrame(() => {
+      drawCanvas();
+    });
+
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+  }, [maxWidth, maxHeight]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0) {
+            if (rafRef.current !== null) {
+              cancelAnimationFrame(rafRef.current);
+            }
+            rafRef.current = requestAnimationFrame(() => {
+              drawCanvas();
+            });
+          }
+        });
+      },
+      {
+        threshold: [0, 0.1, 0.5, 1],
+        rootMargin: '50px',
+      }
+    );
+
+    observerRef.current.observe(container);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
+  }, [drawCanvas]);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (animationTimeoutRef.current !== null) {
+        clearTimeout(animationTimeoutRef.current);
+        animationTimeoutRef.current = null;
+      }
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
+  }, []);
+
   const canvasStyle = useMemo(() => ({ maxWidth: '100%', height: 'auto' }), []);
 
   return (
-    <div className="relative inline-block">
+    <div ref={containerRef} className="relative inline-block">
       <canvas
         ref={canvasRef}
         width={maxWidth}
