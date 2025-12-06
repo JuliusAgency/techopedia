@@ -8,6 +8,34 @@ An intelligent design analysis platform that transforms SVG designs into actiona
 - **Issue Detection**: Automatically flags problematic elements including out-of-bounds rectangles and missing fills
 - **Comprehensive Analysis**: Provides detailed insights for every element in your design files
 
+## Tech Stack
+
+### Frontend
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **React Router DOM** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **GSAP** - Animation library
+- **Lucide React** - Icon library
+
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **TypeScript** - Type safety
+- **MongoDB** - Database
+- **Mongoose** - MongoDB object modeling
+- **Multer** - File upload handling
+- **fast-xml-parser** - SVG/XML parsing
+- **CORS** - Cross-origin resource sharing
+- **dotenv** - Environment variable management
+
+### Development Tools
+- **npm workspaces** - Monorepo management
+- **concurrently** - Run multiple commands simultaneously
+- **nodemon** - Development server auto-reload
+- **TypeScript** - Type checking and compilation
+
 ## Prerequisites
 
 - Node.js (v18 or higher)
